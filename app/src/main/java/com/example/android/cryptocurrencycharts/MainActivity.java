@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String BASE_URL ="https://min-api.cryptocompare.com";
+   private static final String BASE_URL ="https://min-api.cryptocompare.com";
 
     private Data data;
     //   private Adapter adapter;
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
                         .baseUrl(BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
+
+      // Call<List<CryptoList>>
 
      service = retrofit.create(GetDataService.class);
         getDatafromApi();
