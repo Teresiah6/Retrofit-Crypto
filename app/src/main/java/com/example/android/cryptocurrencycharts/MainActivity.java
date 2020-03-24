@@ -5,6 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,13 +21,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-   private static final String BASE_URL ="https://min-api.cryptocompare.com";
+    String BASE_URL ="https://min-api.cryptocompare.com";
+    String fsyms = "BTC,ETH";
+    String tsyms = "USD,JPY,EUR,GBP";
 
-    private Data data;
+
     //   private Adapter adapter;
-    private ArrayList<CryptoList> list;
-    private RecyclerView recyclerView;
-    private GetDataService service;
+   // private ArrayList<BitcoinObject> list;
+  //  private RecyclerView recyclerView;
+    GetDataService service;
+    ProgressBar progressBar;
+
 
     private String apiKey ="95953efef1284a958822ab5d8ab8fe9f4faf56bcf5d66689b1ca8720ba4a86c2";
 
@@ -33,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        data = new Data();
-        list = new ArrayList<>();
-        recyclerView = findViewById(R.id.cryptorv);
+//        data = new Data();
+//        list = new ArrayList<>();
+//        recyclerView = findViewById(R.id.cryptorv);
 
 
-
+        progressBar = findViewById(R.id.progress_circular);
        Retrofit retrofit = new retrofit2.Retrofit.Builder()
                         .baseUrl(BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create())
@@ -47,39 +54,79 @@ public class MainActivity extends AppCompatActivity {
       // Call<List<CryptoList>>
 
      service = retrofit.create(GetDataService.class);
-        getDatafromApi();
+        getDataFromApi();
             }
+    private void getDataFromApi() {
 
-    private void getDatafromApi() {
-
-        service.getData(apiKey).enqueue(new Callback<List<CryptoList>>() {
+        service.getData(apiKey, fsyms, tsyms).enqueue(new Callback<CryptoObject>() {
             @Override
-            public void onResponse(Call<List<CryptoList>> call, Response<List<CryptoList>> response) {
+            public void onResponse(Call<CryptoObject> call, Response<CryptoObject> response) {
+
                 if (response.body() != null) {
-                    list.addAll(response.body());
 
-                    setupAdapter(list);
+                    CryptoObject cryptoObject = response.body();
 
+                    setViews(cryptoObject);
 
                 }
+
             }
 
             @Override
-            public void onFailure(Call<List<CryptoList>> call, Throwable t) {
+            public void onFailure(Call<CryptoObject> call, Throwable t) {
 
-                    Toast.makeText(MainActivity.this, "Something went wrong try again", Toast.LENGTH_SHORT).show();
             }
         });
+
+    }
+
+    private void setViews(CryptoObject cryptoObject) {
+
+        progressBar.setVisibility(View.GONE);
+
+        BitcoinObject bitcoin = cryptoObject.bitcoinObject;
+
+
+        TextView usdBitcoin = findViewById(R.id.usdb);
+        usdBitcoin.setText(String.valueOf("US Dollars: "+ bitcoin.us_dollars));
+
+        TextView poundBitcoin = findViewById(R.id.gbpb);
+        poundBitcoin.setText(String.valueOf("British Pound: " + bitcoin.british_pound));
+
+        TextView jpyBitcoin = findViewById(R.id.jpyb);
+        jpyBitcoin.setText(String.valueOf("Japanese Yen: " +bitcoin.japanese_yen));
+
+        TextView euroBitcoin = findViewById(R.id.eurob);
+        euroBitcoin.setText(String.valueOf("Euros: " + bitcoin.euro));
+
+        EtheriumObject etherium = cryptoObject.etheriumObject;
+
+        TextView usdEth = findViewById(R.id.usde);
+        usdEth.setText(String.valueOf("US Dollars: " +etherium.us_dollars));
+
+        TextView poundEth = findViewById(R.id.gbpe);
+        poundEth.setText(String.valueOf("British Pound: " + etherium.british_pound));
+
+        TextView jpyEth = findViewById(R.id.jpye);
+        jpyEth.setText(String.valueOf("Japanese Yen: " + etherium.japanese_yen));
+
+        TextView euroEth = findViewById(R.id.euroe);
+        euroEth.setText(String.valueOf("Euros: " + etherium.euro));
     }
 
 
+//
+//
+//    private void  setupAdapter(List<BitcoinObject> list) {
+//        recyclerView = findViewById(R.id.cryptorv);
+//       Adapter adapter= new Adapter(list, MainActivity.this);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+//        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.setAdapter(adapter);
+//
+//    }
+//}
 
-    private void  setupAdapter(List<CryptoList> list) {
-        recyclerView = findViewById(R.id.cryptorv);
-       Adapter adapter= new Adapter(list, MainActivity.this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+
 
     }
-}

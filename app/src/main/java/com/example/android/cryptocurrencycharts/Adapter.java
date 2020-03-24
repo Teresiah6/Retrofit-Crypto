@@ -13,10 +13,10 @@ import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
-    public List<CryptoList> mList;
+    public List<BitcoinObject> mList;
     private Context context;
 
-    public Adapter(List<CryptoList> mList, Context context) {
+    public Adapter(List<BitcoinObject> mList, Context context) {
         this.mList = mList;
         this.context = context;
     }
@@ -34,12 +34,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        CryptoList cryptoList = mList.get(position);
-
-        holder.currency.setText(cryptoList.fsym);
-        holder.USD.setText(cryptoList.tysms);
-     //holder.Jpytv.setText(cryptoList.tryconversion);
-       // holder.Euros.setText(cryptoList.extraparams);
+        BitcoinObject cryptoList = mList.get(position);
+//
+//        holder.currency.setText(cryptoList.fsym);
+//        holder.USD.setText(cryptoList.tysms);
+//     //holder.Jpytv.setText(cryptoList.tryconversion);
+//       // holder.Euros.setText(cryptoList.extraparams);
 
     }
 

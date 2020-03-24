@@ -9,8 +9,10 @@ import retrofit2.http.Query;
 public interface GetDataService {
     public static final String BASE_URL ="https://min-api.cryptocompare.com";
 
-    @GET("/data/pricemulti?fsyms=ETH,DASH&tsyms=BTC,USD,EUR")
-    Call<List<CryptoList>> getData(@Query("apiKey") String api);
+    @GET("/data/pricemulti")
+    Call<CryptoObject> getData(@Query("apiKey") String api,
+                                      @Query("fsyms") String fsyms,
+                                      @Query("tsyms") String tsyms);
 
 
 }
